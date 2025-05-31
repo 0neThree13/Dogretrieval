@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Dog Retrieval{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入外部 CSS 文件 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+
+<body class="text-gray-800">
+  <!-- 上方导航栏 -->
+  <header class="flex items-center justify-between px-8 py-4 bg-transparent text-white">
+
+  <!-- 左侧 logo 和任务链接 -->
+  <div class="flex items-center space-x-12">
+    <div class="text-4xl font-bold">Dog Retrieval</div>
+    <nav class="flex space-x-6 text-lg">
+      <a href="{{ url_for('retrieval') }}" class="hover:bg-white hover:text-indigo-600 px-4 py-2 rounded-full transition">Retrieval</a>
+      <a href="{{ url_for('generation') }}" class="hover:bg-white hover:text-indigo-600 px-4 py-2 rounded-full transition">Generation</a>
+      <a href="{{ url_for('segmentation') }}" class="hover:bg-white hover:text-indigo-600 px-4 py-2 rounded-full transition">Segmentation</a>
+      <a href="{{ url_for('chat') }}" class="hover:bg-white hover:text-indigo-600 px-4 py-2 rounded-full transition">Chat</a>
+      <a class="hover:bg-white hover:text-indigo-600 px-4 py-2 rounded-full transition">FQA</a>
+    </nav>
+  </div>
+
+
+  <!-- 右侧按钮 -->
+  <div class="flex space-x-6 items-center text-xl">
+    <!-- 搜索图标按钮 -->
+    <button class="focus:outline-none w-6 h-6 text-white ">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+        <path d="M75.1293 69.2375L92.9752 87.0792L87.0793 92.975L69.2377 75.1292C62.5991 80.4509 54.3418 83.3454 45.8335 83.3333C25.1335 83.3333 8.3335 66.5333 8.3335 45.8333C8.3335 25.1333 25.1335 8.33334 45.8335 8.33334C66.5335 8.33334 83.3335 25.1333 83.3335 45.8333C83.3456 54.3417 80.4511 62.5989 75.1293 69.2375ZM66.771 66.1458C72.059 60.7079 75.0121 53.4185 75.0002 45.8333C75.0002 29.7167 61.946 16.6667 45.8335 16.6667C29.7168 16.6667 16.6668 29.7167 16.6668 45.8333C16.6668 61.9458 29.7168 75 45.8335 75C53.4186 75.012 60.708 72.0588 66.146 66.7708L66.771 66.1458Z" fill="currentColor"/>
+      </svg>
+    </button>
+
+    <!-- 地球图标 -->
+    <button class="w-6 h-6 focus:outline-none">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+      <path d="M50.0002 91.6667C26.9877 91.6667 8.3335 73.0125 8.3335 50C8.3335 26.9875 26.9877 8.33334 50.0002 8.33334C73.0127 8.33334 91.6668 26.9875 91.6668 50C91.6668 73.0125 73.0127 91.6667 50.0002 91.6667ZM40.4585 81.9458C36.3477 73.2263 33.9663 63.7926 33.446 54.1667H16.9252C17.7359 60.5788 20.3915 66.6174 24.5692 71.5488C28.7469 76.4802 34.2669 80.0922 40.4585 81.9458ZM41.7918 54.1667C42.421 64.3292 45.3252 73.875 50.0002 82.3C54.8015 73.6523 57.6062 64.0395 58.2085 54.1667H41.7918ZM83.0752 54.1667H66.5543C66.034 63.7926 63.6526 73.2263 59.5418 81.9458C65.7334 80.0922 71.2534 76.4802 75.4311 71.5488C79.6088 66.6174 82.2644 60.5788 83.0752 54.1667ZM16.9252 45.8333H33.446C33.9663 36.2074 36.3477 26.7737 40.4585 18.0542C34.2669 19.9078 28.7469 23.5198 24.5692 28.4512C20.3915 33.3827 17.7359 39.4213 16.9252 45.8333ZM41.796 45.8333H58.2043C57.6033 35.9608 54.8 26.3481 50.0002 17.7C45.1988 26.3477 42.3941 35.9605 41.7918 45.8333H41.796ZM59.5418 18.0542C63.6526 26.7737 66.034 36.2074 66.5543 45.8333H83.0752C82.2644 39.4213 79.6088 33.3827 75.4311 28.4512C71.2534 23.5198 65.7334 19.9078 59.5418 18.0542Z" fill="currentColor"/>
+    </svg>
+    </button>
+
+    <!-- 用户图标 -->
+    <button class="w-6 h-6 focus:outline-none">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+      <path d="M83.3332 91.6667H74.9998V83.3333C74.9998 80.0181 73.6829 76.8387 71.3387 74.4945C68.9945 72.1503 65.815 70.8333 62.4998 70.8333H37.4998C34.1846 70.8333 31.0052 72.1503 28.661 74.4945C26.3168 76.8387 24.9998 80.0181 24.9998 83.3333V91.6667H16.6665V83.3333C16.6665 77.808 18.8614 72.5089 22.7684 68.6019C26.6755 64.6949 31.9745 62.5 37.4998 62.5H62.4998C68.0252 62.5 73.3242 64.6949 77.2312 68.6019C81.1382 72.5089 83.3332 77.808 83.3332 83.3333V91.6667ZM49.9998 54.1667C46.7168 54.1667 43.4659 53.52 40.4328 52.2636C37.3996 51.0073 34.6436 49.1658 32.3222 46.8443C30.0007 44.5229 28.1592 41.7669 26.9028 38.7337C25.6465 35.7006 24.9998 32.4497 24.9998 29.1667C24.9998 25.8836 25.6465 22.6327 26.9028 19.5996C28.1592 16.5664 30.0007 13.8105 32.3222 11.489C34.6436 9.16752 37.3996 7.32604 40.4328 6.06967C43.4659 4.8133 46.7168 4.16666 49.9998 4.16666C56.6302 4.16666 62.9891 6.80058 67.6775 11.489C72.3659 16.1774 74.9998 22.5362 74.9998 29.1667C74.9998 35.7971 72.3659 42.1559 67.6775 46.8443C62.9891 51.5327 56.6302 54.1667 49.9998 54.1667ZM49.9998 45.8333C54.4201 45.8333 58.6593 44.0774 61.785 40.9518C64.9106 37.8262 66.6665 33.5869 66.6665 29.1667C66.6665 24.7464 64.9106 20.5071 61.785 17.3815C58.6593 14.2559 54.4201 12.5 49.9998 12.5C45.5796 12.5 41.3403 14.2559 38.2147 17.3815C35.0891 20.5071 33.3332 24.7464 33.3332 29.1667C33.3332 33.5869 35.0891 37.8262 38.2147 40.9518C41.3403 44.0774 45.5796 45.8333 49.9998 45.8333Z" fill="currentColor"/>
+    </svg>
+    </button>
+  </div>
+
+
+
+
+  </header>
+
+
+  <!-- 页面内容 -->
+  <main class="relative h-[100vh] px-16 pt-32 pb-24 flex flex-col justify-end">
+  <!-- 主要文本内容 -->
+  <div class="z-10 mb-24">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+      <span class="block">Multimodal Retrieval Canine Engine:Insight-Driven </span>
+      <span class="block">Compassion</span>
+    </h1>
+    <p class="text-lg md:text-xl text-white mt-2 space-y-2">
+      <span class="block">Snap a Photo, Record a Bark, or Describe – We Find the Answers</span>
+      <span class="block">Tailored to canine care, we bridge images, sounds, and language for clarity.</span>
+      <span class="block">Detect symptoms, identify breeds, understand needs – instantly, compassionately.</span>
+    </p>
+  </div>
+
+  <!-- 左下角按钮 -->
+  <a href="#about"
+     class="absolute bottom-4 left-8 px-6 py-2 bg-white text-indigo-700 rounded-full font-semibold shadow hover:bg-indigo-100 transition z-20">
+    About Us
+  </a>
+  <a href="#explore"
+     class="absolute bottom-4 right-12 px-6 py-2 bg-white text-indigo-700 rounded-full font-semibold shadow hover:bg-indigo-100 transition z-20">
+    Explore animal protection
+  </a>
+  </main>
+</body>
+</html>

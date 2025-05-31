@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <title>Chat UI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: #F1F1F1;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #F1F1F1;
+    }
+
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: #1AAD19;
+      color: #ffffff;
+      border-bottom-right-radius: 0;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background-color: white;
+      color: black;
+      border-bottom-left-radius: 0;
+    }
+
+    .bot img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    .input-box {
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-row input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .input-row button {
+      padding: 12px 36px;
+      background-color: #1AAD19;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .input-row button:hover {
+      background-color: #179b16;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button-group button {
+      padding: 10px 14px;
+      background-color: #1AAD19;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .button-group button:hover {
+      background-color: #179b16;
+    }
+
+    .btn-black {
+      background-color: #ffffff;
+      color: black;
+    }
+
+    .btn-black:hover {
+      background-color: #f0f0f0;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    #modelMenu {
+    display: none;
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+  }
+
+    #modelMenu label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    #modelSelect {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+      font-size: 16px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+      cursor: pointer;
+    }
+
+    #modelSelect:focus {
+      outline: none;
+      border-color: #4CAF50;
+      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+
+  </style>
+
+
+<body>
+  <div class="chat-container">
+    <div id="chatBox" class="chat-box">
+      <!-- 聊天内容动态插入 -->
+    </div>
+
+    <div class="input-box">
+      <div class="input-row">
+        <input type="text" id="questionInput" placeholder="询问任何问题" />
+        <button onclick="sendMessage()">发送</button>
+      </div>
+
+      <div class="button-group">
+        <button onclick="document.getElementById('fileUpload').click()">+ 上传文件</button>
+        <input type="file" id="fileUpload" class="file-input" accept="image/*,audio/*" multiple onchange="handleFiles(this.files)">
+        <button onclick="toggleModelMenu()">模型选择</button>
+        <button onclick="performRetrieval()">文本生成</button>
+        <button onclick="performRetrieval()">字幕生成</button>
+        <button onclick="performRetrieval()">图片生成</button>
+        <button onclick="performRetrieval()">视频生成</button>
+
+        <button class="btn-black" onclick="startVoice()">🎙Voice</button>
+
+        <button onclick="window.location.href='/'">返回首页</button>
+
+
+      </div>
+    </div>
+
+    <div id="modelMenu">
+      <label for="modelSelect">选择模型：</label>
+      <select id="modelSelect">
+        <option value="glm-4">GLM-4</option>
+        <option value="blip">BLIP</option>
+        <option value="cogview-3-flash">CogView-3</option>
+        <option value="cogvideox-flash">CogVideoX</option>
+      </select>
+    </div>
+  </div>
+
+  <script>
+    function appendMessage(role, content) {
+      const chatBox = document.getElementById("chatBox");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${role}`;
+      messageDiv.innerHTML = content;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("questionInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      const model = document.getElementById("modelSelect").value;
+
+      appendMessage("user", message);
+      input.value = "";
+
+      fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: message, model: model })
+      })
+        .then(response => response.json())
+        .then(data => {
+          // 文生图模式
+          if (model === "cogview-3-flash" && data.results) {
+            data.results.forEach(item => {
+              const imgUrl = item.url || (window.location.origin + "/static/pre_data/" + item.filename);
+              const html = `
+                <div>
+                  <b>根据您的描述所生成的图片：</b><br>
+                  <img src="${imgUrl}" alt="生成图片" style="max-width:100%; border-radius:8px; margin-top:5px;">
+                </div>
+              `;
+              appendMessage("bot", html);
+            });
+          }
+
+          else if (model === "cogvideox-flash" && Array.isArray(data.results)) {
+            data.results.forEach(item => {
+              const videoUrl = item.url;
+              const html = `
+                <div>
+                  <b>根据您的描述所生成的视频：</b><br>
+                  <video controls style="max-width:100%; border-radius:8px; margin-top:5px;">
+                    <source src="${videoUrl}" type="video/mp4">
+                    您的浏览器不支持 video 标签。
+                  </video>
+                </div>
+              `;
+              appendMessage("bot", html);
+            });
+          }
+
+          else if (data.error) {
+            appendMessage("bot", "❌ 发生错误：" + data.error);
+          }
+        });
+    }
+
+    function toggleModelMenu() {
+      const menu = document.getElementById("modelMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function handleFiles(files) {
+      const model = document.getElementById("modelSelect").value;
+
+      if (model === "glm-4") {
+        for (let file of files) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const base64Data = e.target.result;
+
+            let prompt;
+            if (file.type.startsWith("image/")) {
+              prompt = "图片中狗的物种是什么？同时简短描述图片内容。";
+            } else if (file.type.startsWith("audio/")) {
+              prompt = "请识别音频中的内容，并简要总结。";
+            } else {
+              appendMessage("bot", "不支持的文件类型：" + file.type);
+              return;
+            }
+
+            appendMessage("user", `[上传了文件: ${file.name}]<br><img src="${base64Data}" width="400">`);
+            appendMessage("user", prompt);
+
+            fetch("/upload", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                data: base64Data,
+                type: file.type,
+                prompt: prompt,
+                model: model
+              })
+            })
+                    .then(res => res.json())
+                    .then(data => {
+                      appendMessage("bot", data.reply || "未返回内容");
+                    })
+                    .catch(err => {
+                      console.error(err);
+                      appendMessage("bot", "上传失败，请重试。");
+                    });
+          };
+
+          reader.readAsDataURL(file);
+        }
+      }
+
+    }
+
+
+  </script>
+</body>
+</html>

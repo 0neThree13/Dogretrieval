@@ -1,0 +1,15 @@
+/* 页面背景图设置 */
+body {
+  background-image: url("dog.jpeg"); /* 替换为你的图片名 */
+  background-repeat: no-repeat;           /* 不重复 */
+  background-size: cover;                 /* 覆盖整个页面 */
+  background-position: center center;     /* 居中显示 */
+  background-attachment: fixed;           /* 页面滚动时背景不动 */
+}
+
+/* 点击导航项时白底色 */
+nav a:active {
+  background-color: white;
+  color: black;
+}
+
