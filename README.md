@@ -114,3 +114,5 @@ python DogUI/app.py
 在浏览器中访问 http://localhost:5000 开始体验。
 
 ```
+
+联系方式：[choucisan@gmail.com]
