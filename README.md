@@ -7,6 +7,10 @@
 
 > **“理解与关爱并重”：借助 AI 理解狗狗，唤起人类关怀。**
 
+<p align="center">
+  <img src="image/example_ui.png" alt="Dogretrieval UI 示例" width="700"/>
+</p>
+
 
 ---
 
