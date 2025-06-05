@@ -9,11 +9,12 @@ from tqdm import tqdm
 
 
 # 路径设置
-IMAGE_DIR = "DogUI/static/pre_data"
+IMAGE_DIR = "DogUI/static/data"
 CAPTION_CSV = "DogUI/static/captions.csv"
 
 SAVE_IMAGE_EMB = "DogUI/static/image_embeddings.npy"
 SAVE_TEXT_EMB = "DogUI/static/image_captions.npy"
+
 
 class Args:
     #Training arguments
@@ -33,8 +34,7 @@ class Args:
 
     save_path = 'Dogretrieval/Dogclip'  # 保存路径
     lora_path = "DogUI/static/lora_weights.pt"
-    filename = 'lora_weights'  # 保存文件名（会自动加 .pt）
-
+    filename = 'lora_weights'
     eval_only = False  # 是否只评估 LoRA 模块
 
 

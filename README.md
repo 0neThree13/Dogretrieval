@@ -103,11 +103,28 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/0neThree13/Dogretrieval.git
+git clone https://github.com/choucisan/Dogretrieval.git
 cd Dogretrieval
 
 # 安装依赖
 pip install -r requirements.txt
+
+#数据集下载：
+https://pan.quark.cn/s/847c986bb883
+数据集放置DogUI/static目录下
+IMAGE_DIR = "DogUI/static/data"
+CAPTION_CSV = "DogUI/static/captions.csv"
+
+#图片文本emd提前处理，检索更快
+python encode_image.py 
+
+SAVE_IMAGE_EMB = "DogUI/static/image_embeddings.npy"
+SAVE_TEXT_EMB = "DogUI/static/image_captions.npy"
+
+#智谱api设置
+client = ZhipuAI(api_key="")
+API_URL = ""
+API_KEY = ""
 
 # 运行服务
 python DogUI/app.py

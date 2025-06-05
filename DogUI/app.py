@@ -75,8 +75,9 @@ for layer in list_lora_layers:
 #数据加载
 captions_df = pd.read_csv("DogUI/static/captions.csv")
 image_embeddings = np.load("DogUI/static/image_embeddings.npy")
-caption_embeddings = np.load("DogUI/static/caption_embeddings.npy")
+# caption_embeddings = np.load("DogUI/static/caption_embeddings.npy")
 image_captions= np.load("DogUI/static/image_captions.npy")
+
 
 with open("DogUI/static/captions.csv", "r") as f:
     captions = [line.strip() for line in f]
@@ -84,10 +85,11 @@ with open("DogUI/static/captions.csv", "r") as f:
 with open("DogUI/static/filenames.txt", "r") as f:
     filenames = [line.strip() for line in f]
 
-#GLM-4 api设置
-client = ZhipuAI(api_key="fce8366b01e449bd9172b9f8e163985d.1EoenTlzdaMxJ1oW")
-API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
-API_KEY = "71a8b807092b4f00a4972d18fc4554c5.7B84Fb4CBec31qGt"
+
+#智谱api设置
+client = ZhipuAI(api_key="")
+API_URL = ""
+API_KEY = ""
 
 
 #百度识图爬虫
@@ -509,6 +511,8 @@ def get_similar_image_urls(image_path):
         image_urls_all.append(img_url)
 
     return image_urls_all
+
+
 
 #网页检索功能
 @app.route('/upload_and_search', methods=['POST'])
